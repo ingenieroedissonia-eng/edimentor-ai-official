@@ -67,13 +67,11 @@ METODOLOGÍA DE RESPUESTA:
 4. Recomienda siguientes pasos claros y medibles.
 `.trim();
 
-  // 3. Ejecución en Gemini (Vertex AI)
+  // 3. Ejecución en Gemini (Vertex AI — forma estable)
   console.log('🚀 Ejecutando mentoría en Gemini...');
 
   const result = await geminiModel.generateContent({
-    systemInstruction: {
-      parts: [{ text: systemPrompt }],
-    },
+    systemInstruction: systemPrompt,
     contents: [
       {
         role: 'user',
