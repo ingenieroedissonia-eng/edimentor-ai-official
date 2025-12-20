@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 
 type ChatMessage = {
@@ -49,75 +50,72 @@ export default function EdiMentorPage() {
   };
 
   return (
-    /* 🔥 CORRECCIÓN MÓVIL CRÍTICA: h-[100dvh] para evitar cortes en celulares */
-    <main className="flex flex-col h-[100dvh] bg-[#050505] text-zinc-100 font-sans selection:bg-blue-500/30 overflow-hidden">
+    <main className="flex flex-col h-[100dvh] bg-[#050505] text-zinc-100 font-sans overflow-hidden">
       <style jsx global>{`
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
       `}</style>
 
       {/* Header */}
-      <header className="p-4 sm:p-5 border-b border-zinc-800/60 bg-black/20 backdrop-blur-xl z-10 shrink-0">
+      <header className="p-4 border-b border-zinc-800/60 bg-black/30 backdrop-blur-xl shrink-0">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div>
-            <h1 className="text-lg sm:text-xl font-extrabold tracking-tight bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 bg-clip-text text-transparent">
+            <h1 className="text-lg font-extrabold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
               EdiMentor AI
             </h1>
-            <p className="text-zinc-500 text-[9px] sm:text-[10px] tracking-[0.2em] font-mono mt-0.5 uppercase">
-              GROUNDING ENGINE v6.0 | M.A.I.I.E. ARCHITECTURE
+            <p className="text-[10px] text-zinc-500 tracking-[0.2em] font-mono uppercase">
+              Grounding Engine v6.0 | M.A.I.I.E.
             </p>
           </div>
-          <div className="hidden sm:flex items-center gap-3 px-3 py-1 bg-zinc-900/50 rounded-full border border-zinc-800/50">
-            <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
-            <span className="text-[10px] text-zinc-400 font-mono">NODE_GCP: CONNECTED</span>
+
+          <div className="flex items-center gap-4">
+            <Link
+              href="/"
+              className="text-xs text-zinc-400 hover:text-white transition"
+            >
+              ← Volver
+            </Link>
+
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-zinc-900/50 rounded-full border border-zinc-800">
+              <span className="w-1.5 h-1.5 bg-blue-500 rounded-full animate-pulse" />
+              <span className="text-[10px] text-zinc-400 font-mono">
+                NODE_GCP: CONNECTED
+              </span>
+            </div>
           </div>
         </div>
       </header>
 
-      {/* Chat Area */}
-      <section className="flex-1 overflow-y-auto px-4 py-6 sm:py-10 space-y-6 sm:space-y-8 max-w-5xl mx-auto w-full flex flex-col scroll-smooth">
+      {/* Chat */}
+      <section className="flex-1 overflow-y-auto px-4 py-6 space-y-6 max-w-5xl mx-auto w-full flex flex-col">
         {chatHistory.length === 0 ? (
-          <div className="flex-1 flex flex-col items-center justify-center text-center animate-in fade-in duration-700 px-4">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl bg-blue-600/5 flex items-center justify-center border border-blue-500/10 mb-6 shadow-inner ring-1 ring-blue-500/20">
-              <span className="text-2xl sm:text-3xl">🧩</span>
+          <div className="flex-1 flex flex-col items-center justify-center text-center">
+            <div className="w-16 h-16 rounded-3xl bg-blue-600/5 flex items-center justify-center border border-blue-500/10 mb-6">
+              🧩
             </div>
-            <h2 className="text-zinc-300 text-lg sm:text-xl font-semibold mb-2">
+            <h2 className="text-zinc-300 text-lg font-semibold">
               Sistema M.A.I.I.E. Operativo
             </h2>
-            <p className="text-zinc-600 text-xs sm:text-sm max-w-xs leading-relaxed">
-              Consulta sobre el perfil del Arquitecto, visión estratégica o análisis técnico bilingüe.
+            <p className="text-zinc-600 text-sm max-w-xs">
+              Consulta sobre arquitectura, estrategia o análisis técnico.
             </p>
           </div>
         ) : (
-          chatHistory.map((chat, index) => (
+          chatHistory.map((chat, i) => (
             <div
-              key={index}
-              className={`flex ${chat.role === 'user' ? 'justify-end' : 'justify-start'} animate-in slide-in-from-bottom-3 duration-300`}
+              key={i}
+              className={`flex ${chat.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
-                className={`max-w-[90%] sm:max-w-[75%] px-5 py-3 sm:px-6 sm:py-4 rounded-3xl text-sm sm:text-[15px] leading-relaxed shadow-xl ${
+                className={`max-w-[85%] px-5 py-3 rounded-3xl text-sm shadow-xl ${
                   chat.role === 'user'
                     ? 'bg-blue-600 text-white rounded-tr-none'
-                    : 'bg-zinc-900 border border-zinc-800 text-zinc-100 rounded-tl-none'
+                    : 'bg-zinc-900 border border-zinc-800 rounded-tl-none'
                 }`}
               >
                 {chat.role === 'ai' ? (
-                  <ReactMarkdown
-                    components={{
-                      strong: ({ ...props }) => <span className="font-bold text-blue-300" {...props} />,
-                      ul: ({ ...props }) => <ul className="list-disc ml-4 space-y-1 my-2" {...props} />,
-                      ol: ({ ...props }) => <ol className="list-decimal ml-4 space-y-1 my-2" {...props} />,
-                      li: ({ ...props }) => <li className="pl-1" {...props} />,
-                      p: ({ ...props }) => <p className="mb-2 last:mb-0" {...props} />,
-                      code: ({ ...props }) => (
-                        <code className="bg-zinc-800 px-1 py-0.5 rounded text-xs font-mono text-blue-200 border border-zinc-700" {...props} />
-                      )
-                    }}
-                  >
-                    {chat.text}
-                  </ReactMarkdown>
+                  <ReactMarkdown>{chat.text}</ReactMarkdown>
                 ) : (
                   chat.text
                 )}
@@ -127,15 +125,10 @@ export default function EdiMentorPage() {
         )}
 
         {isLoading && (
-          <div className="flex justify-start animate-in fade-in duration-300">
-             <div className="bg-zinc-900/50 border border-zinc-800/50 px-4 py-2 sm:px-5 sm:py-3 rounded-3xl rounded-tl-none flex items-center gap-3">
-              <div className="flex gap-1.5">
-                <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.3s]" />
-                <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-blue-500 rounded-full animate-bounce [animation-delay:-0.15s]" />
-                <span className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-blue-500 rounded-full animate-bounce" />
-              </div>
-              <span className="text-[10px] sm:text-[11px] text-zinc-500 font-mono tracking-widest uppercase">
-                Analizando...
+          <div className="flex justify-start">
+            <div className="bg-zinc-900/50 border border-zinc-800 px-4 py-2 rounded-3xl">
+              <span className="text-xs text-zinc-500 font-mono">
+                Analizando…
               </span>
             </div>
           </div>
@@ -143,33 +136,31 @@ export default function EdiMentorPage() {
         <div ref={chatEndRef} />
       </section>
 
-      {/* Footer / Input Area */}
-      <footer className="p-4 sm:p-6 bg-gradient-to-t from-[#050505] to-transparent shrink-0">
-        <div className="max-w-4xl mx-auto">
-          <form
-            onSubmit={handleSendMessage}
-            className="flex gap-2 sm:gap-3 p-1.5 sm:p-2.5 bg-zinc-900/80 border border-zinc-800 rounded-3xl backdrop-blur-2xl focus-within:ring-2 focus-within:ring-blue-500/20 transition-all shadow-2xl"
+      {/* Input */}
+      <footer className="p-4 bg-black/40 shrink-0">
+        <form
+          onSubmit={handleSendMessage}
+          className="max-w-4xl mx-auto flex gap-2 bg-zinc-900/80 border border-zinc-800 rounded-3xl p-2"
+        >
+          <input
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Consultar al Arquitecto…"
+            className="flex-1 bg-transparent px-4 py-2 text-sm outline-none"
+            disabled={isLoading}
+          />
+          <button
+            type="submit"
+            disabled={isLoading || !message.trim()}
+            className="bg-blue-600 px-6 py-2 rounded-2xl text-sm font-bold disabled:opacity-40"
           >
-            <input
-              type="text"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Consultar al Arquitecto..."
-              className="flex-1 bg-transparent outline-none px-4 py-2 sm:px-5 sm:py-3 text-sm sm:text-[15px] text-zinc-100 placeholder:text-zinc-600"
-              disabled={isLoading}
-            />
-            <button
-              type="submit"
-              disabled={isLoading || !message.trim()}
-              className="bg-blue-600 hover:bg-blue-500 text-white px-5 sm:px-8 py-2 sm:py-3 rounded-2xl font-bold text-sm transition-all disabled:opacity-30"
-            >
-              {isLoading ? '...' : 'Enviar'}
-            </button>
-          </form>
-          <p className="text-center text-[8px] sm:text-[9px] text-zinc-700 mt-4 uppercase tracking-[0.2em] font-medium leading-tight">
-            Desarrollado | por Edisson A.G.C. Ingeniería IA Aplicada al Comercio
-          </p>
-        </div>
+            Enviar
+          </button>
+        </form>
+
+        <p className="text-center text-[9px] text-zinc-700 mt-3 tracking-widest uppercase">
+          Desarrollado | por Edisson A.G.C.
+        </p>
       </footer>
     </main>
   );
