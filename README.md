@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🤖 EdiMentor AI — Flagship Product (M.A.I.I.E. Ecosystem)
 
-## Getting Started
+**EdiMentor AI** is an enterprise-grade artificial intelligence platform designed under the **Edisson Intelligent Architecture & Engineering Model (M.A.I.I.E.)**.  
+It operates as a **CTO-level strategic copilot and technical mentor**, capable of reasoning, responding, and assisting in real time with engineering and business challenges.
 
-First, run the development server:
+The system is built with **real production standards**, not as an experimental demo.
 
+---
+
+## 🎯 The Problem
+
+There is a lack of 24/7 AI systems that truly demonstrate:
+
+- Real production architecture  
+- Structured reasoning  
+- Proper use of enterprise cloud services  
+- A clear path toward advanced agent orchestration  
+
+Most solutions remain simple chat interfaces without architectural rigor.
+
+---
+
+## 💡 The Solution
+
+EdiMentor AI implements a **Retrieval-Augmented Generation (RAG)** architecture with guided reasoning and specialized roles, enabling:
+
+- Context-aware and technical responses  
+- Real-time strategic mentorship  
+- A solid foundation for evolution toward **multi-agent orchestration**  
+
+The system does not just chat — **it reasons, guides, and structures decisions** within a unified ecosystem.
+
+---
+
+## 🛠️ Technology Stack
+
+- **Core Engine:** Google Vertex AI — **Gemini 2.0 Flash**
+- **AI Architecture:** RAG with controlled grounding
+- **Orchestration:** Specialized role logic (Architect, Engineer, Auditor),  
+  designed and ready for future **LangChain & LangGraph** integration
+- **Frontend:** Next.js 15 (App Router) + React 19
+- **Infrastructure:** Vercel (CI/CD & production deployment)
+- **Persistence:** Deterministic JSON-based memory (MVP),  
+  architected for future Vector Store integration
+- **Security:** Google Cloud Service Account authentication via Base64 environment variables
+
+---
+
+## 🚀 Key Technical Achievements
+
+- **Stable Cloud Connectivity**  
+  Verified production-grade integration between Vercel and Google Vertex AI.
+
+- **Grounding Engine v6.0**  
+  Advanced use of `systemInstruction` following official Vertex AI SDK specifications, ensuring aligned and controlled responses.
+
+- **Deterministic Tool-Calling**  
+  Structured JSON outputs designed for future API integrations and automated workflows.
+
+- **Logical Role Routing**  
+  Controlled routing of queries to specialized roles (Architect, Engineer, Auditor).
+
+- **Multi-Device Stability**  
+  Mobile-first and desktop-stable chat UI using `h-[100dvh]` for consistent UX.
+
+- **Scalable Architecture Foundation**  
+  Production-ready base prepared for multi-agent workflows and vector memory.
+
+---
+
+## 🔐 Secure Setup
+
+### 1. Clone the repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+git clone https://github.com/ingenieroedissonia-eng/edimentor-ai-official.git
+cd edimentor-ai-official
