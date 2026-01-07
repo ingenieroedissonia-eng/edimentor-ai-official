@@ -2,97 +2,69 @@ import { geminiModel } from './gemini-client';
 import { getKnowledgeBase } from './get-knowledge';
 
 /**
- * Grounding Engine v2.5 — Strategic Mentorship Core
- * M.A.I.I.E. Architecture | Production
- * Vertex AI + Gemini 2.0 Flash
- * COST-GOVERNED & CONTEXT-CONTROLLED
+ * Grounding Engine v2.4 — Cost-Governed Mentorship
+ * Arquitectura M.A.I.I.E. | Vertex AI + Gemini 2.0 Flash
  */
+
+const MAX_INPUT_CHARS = 2000; // ≈ 500 tokens aprox
+const MAX_OUTPUT_TOKENS = 400;
 
 export async function generateMentorResponse(
   userPrompt: string
 ): Promise<string> {
 
   if (!userPrompt || typeof userPrompt !== 'string') {
-    throw new Error('Invalid user prompt');
+    throw new Error('User prompt inválido');
   }
 
-  // 1. Load Knowledge Base (authoritative)
-  console.log('📚 Loading knowledge base...');
+  // 1️⃣ LIMPIEZA Y CORTE DE INPUT (ANTI-BURN)
+  const trimmedPrompt = userPrompt.trim().slice(0, MAX_INPUT_CHARS);
+
+  // 2️⃣ CARGAR BASE DE CONOCIMIENTO
   const knowledge = await getKnowledgeBase();
 
   if (!knowledge || knowledge.trim().length === 0) {
-    throw new Error('Knowledge base is empty or invalid');
+    throw new Error('Knowledge base vacía');
   }
 
-  // 2. HARD INPUT CONTROL (Context Trimming)
-  // Prevents oversized prompts from draining tokens
-  const trimmedUserPrompt = userPrompt.slice(0, 2000); // ~ safe input size
-
-  // 3. System Instruction (Frozen Authority Prompt)
+  // 3️⃣ SYSTEM PROMPT CONTROLADO
   const systemPrompt = `
-ROLE:
-You are EdiMentor AI, a strategic copilot and expert mentor in CTO-level thinking,
-Software Architecture, and Artificial Intelligence.
+ROL:
+Eres EdiMentor AI, mentor estratégico de nivel CTO.
+Tu función es responder de forma clara, técnica y concisa.
 
-IDENTITY & CONTROL:
-- You are the MENTOR (AI), not the user.
-- Edisson A.G.C. is the founder, principal architect, and decision authority of the M.A.I.I.E. system.
-- Your role is to validate decisions, elevate technical reasoning,
-  and propose enterprise-grade improvements.
-- Do NOT mention AI limitations.
-- Do NOT include AI disclaimers.
-- Do NOT refer to yourself as an assistant.
+REGLAS:
+- Prioriza precisión sobre verbosidad.
+- Evita respuestas excesivamente largas.
+- Resume cuando sea posible sin perder rigor técnico.
+- No repitas información innecesaria.
 
-LANGUAGE & ADAPTABILITY:
-- Fully bilingual (Spanish & English).
-- Detect the user’s language automatically.
-- Respond professionally in the detected language.
-
-KNOWLEDGE BASE (SOLE SOURCE ABOUT EDISSON):
+BASE DE CONOCIMIENTO (ÚNICA FUENTE SOBRE EDISSON):
 ${knowledge}
-
-KNOWLEDGE RULES:
-- Use ONLY the provided knowledge base.
-- If information does not exist, say so explicitly.
-- Do NOT invent experience, technologies, or achievements.
-
-MENTORING STYLE:
-- Direct and technical.
-- Practical and actionable.
-- Strategic and business-aware.
-- Constructively critical.
-
-RESPONSE METHODOLOGY:
-1. Analyze the problem from an architectural and business perspective.
-2. Validate or correct the technical decision.
-3. Propose enterprise-level alternatives.
-4. Recommend clear, measurable next steps.
 `.trim();
 
-  // 4. Execute Gemini with COST GOVERNANCE
-  console.log('🚀 Executing governed Gemini request...');
-
+  // 4️⃣ LLAMADA A GEMINI CON LÍMITES EXPLÍCITOS
   const result = await geminiModel.generateContent({
     systemInstruction: systemPrompt,
+    generationConfig: {
+      maxOutputTokens: MAX_OUTPUT_TOKENS,
+      temperature: 0.3,
+      topP: 0.9,
+    },
     contents: [
       {
         role: 'user',
-        parts: [{ text: trimmedUserPrompt }],
+        parts: [{ text: trimmedPrompt }],
       },
     ],
-    generationConfig: {
-      temperature: 0.4,
-      topP: 0.9,
-      maxOutputTokens: 512, // 🔒 HARD OUTPUT LIMIT
-    },
   });
 
-  // 5. Safe response extraction
+  // 5️⃣ EXTRACCIÓN SEGURA
   const responseText =
     result?.response?.candidates?.[0]?.content?.parts?.[0]?.text;
 
-  if (!responseText || responseText.trim().length === 0) {
-    throw new Error('Empty response from Gemini');
+  if (!responseText) {
+    throw new Error('Respuesta vacía de Gemini');
   }
 
   return responseText.trim();
