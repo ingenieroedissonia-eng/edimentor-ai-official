@@ -1,33 +1,34 @@
 # Professional Profile — Edisson A.G.C.
 
-## Senior AI Engineer & Solutions Architect  
+## AI Systems Engineer & Solutions Architect  
 ### Specialist in AI Applied to Commerce
 
 ---
 
 ## Core Architecture & Engineering Stack
 - **Cloud & Infrastructure:** Google Cloud Platform (GCP), Cloud Run, Cloud Build, Vertex AI, MLOps  
-- **AI & Machine Learning:** Deep Learning, Generative AI, Large Language Models (LLMs), RAG Systems  
+- **AI & Machine Learning:** Generative AI, Large Language Models (LLMs), RAG Systems, Decision Engineering  
 - **Frameworks & Tooling:** LangChain, LangGraph, Python, Next.js 15, Streamlit  
 
 ---
 
 ## Academic Background
-- **Degree:** B.S. in Artificial Intelligence Engineering & Data Science  
+- **Program:** Artificial Intelligence Engineering & Data Science  
 - **Institution:** Fundación Universitaria San Mateo  
+- **Focus:** Applied AI systems, cloud architecture, and production-grade engineering  
 
 ---
 
-## Professional Identity — Sistema M.A.I.I.E.
-- **Definition:** Creator of the *Sistema M.A.I.I.E.* (Model of Intelligent Architecture & Engineering by Edisson)  
-- **Mission:** Design and engineer high-performance AI systems focused on commercial ROI, scalability, and enterprise-grade reliability  
+## Professional Identity — M.A.I.I.E. System
+- **Definition:** Creator of the *M.A.I.I.E. System* (Model of Intelligent Architecture & Engineering by Edisson)  
+- **Mission:** Design and engineer auditable AI decision systems focused on commercial ROI, scalability, and operational reliability  
 
 ---
 
 ## Flagship Projects
 - **EdiMentor AI**  
-  Enterprise-grade multimodal AI platform built on Vertex AI.  
-  Features multi-agent orchestration, RAG architecture, CI/CD on Cloud Run, and automated response evaluation for quality and reliability.
+  Production-grade AI decision-auditing platform built on Google Vertex AI.  
+  Implements RAG architecture, structured reasoning roles, and secure cloud deployment.
 
 - **SmartROI v2.0**  
-  Financial analysis and decision-support web application for import operations, designed to optimize commercial profitability through data-driven insights.
+  Financial decision engine for import operations, transforming manual analysis into deterministic, ROI-driven projections.
