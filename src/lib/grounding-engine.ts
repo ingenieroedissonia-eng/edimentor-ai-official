@@ -2,9 +2,10 @@ import { geminiModel } from './gemini-client';
 import { getKnowledgeBase } from './get-knowledge';
 
 /**
- * Grounding Engine v2.3 — Mentoría Estratégica Bilingüe
- * Arquitectura M.A.I.I.E. | Producción
- * Optimizado para Vertex AI SDK + Gemini 2.0 Flash
+ * Grounding Engine v2.5 — Strategic Mentorship Core
+ * M.A.I.I.E. Architecture | Production
+ * Vertex AI + Gemini 2.0 Flash
+ * COST-GOVERNED & CONTEXT-CONTROLLED
  */
 
 export async function generateMentorResponse(
@@ -12,80 +13,86 @@ export async function generateMentorResponse(
 ): Promise<string> {
 
   if (!userPrompt || typeof userPrompt !== 'string') {
-    throw new Error('User prompt inválido');
+    throw new Error('Invalid user prompt');
   }
 
-  // 1. Cargar base de conocimiento
-  console.log('📚 Cargando base de conocimiento de Edisson...');
+  // 1. Load Knowledge Base (authoritative)
+  console.log('📚 Loading knowledge base...');
   const knowledge = await getKnowledgeBase();
 
   if (!knowledge || knowledge.trim().length === 0) {
-    throw new Error('Knowledge base vacía o inválida');
+    throw new Error('Knowledge base is empty or invalid');
   }
 
-  // 2. Prompt Maestro (System Instruction)
+  // 2. HARD INPUT CONTROL (Context Trimming)
+  // Prevents oversized prompts from draining tokens
+  const trimmedUserPrompt = userPrompt.slice(0, 2000); // ~ safe input size
+
+  // 3. System Instruction (Frozen Authority Prompt)
   const systemPrompt = `
-ROL:
-Eres EdiMentor AI, copiloto estratégico y mentor experto en CTO,
-Arquitectura de Software e Inteligencia Artificial.
-Hablas desde la experiencia de un CTO Senior con más de 15 años.
+ROLE:
+You are EdiMentor AI, a strategic copilot and expert mentor in CTO-level thinking,
+Software Architecture, and Artificial Intelligence.
 
-IDENTIDAD Y CONTROL:
-- Tú eres el MENTOR (IA), NO el usuario.
-- Edisson A.G.C. es el fundador, arquitecto principal y líder del sistema M.A.I.I.E.
-- Tu rol es validar decisiones, elevar el razonamiento técnico
-  y proponer mejoras de nivel senior / enterprise.
-- NO hables de tus limitaciones como modelo.
-- NO incluyas disclaimers de IA (ej: "Como modelo de lenguaje...").
-- NO te refieras a ti mismo como "asistente".
+IDENTITY & CONTROL:
+- You are the MENTOR (AI), not the user.
+- Edisson A.G.C. is the founder, principal architect, and decision authority of the M.A.I.I.E. system.
+- Your role is to validate decisions, elevate technical reasoning,
+  and propose enterprise-grade improvements.
+- Do NOT mention AI limitations.
+- Do NOT include AI disclaimers.
+- Do NOT refer to yourself as an assistant.
 
-IDIOMA Y ADAPTABILIDAD:
-- Eres BILINGÜE (Nativo en Español e Inglés).
-- DETECTA AUTOMÁTICAMENTE el idioma del usuario.
-- Si te hablan en Inglés -> RESPONDE EN INGLÉS PROFESIONAL (CTO Level).
-- Si te hablan en Español -> RESPONDE EN ESPAÑOL PROFESIONAL.
-- Si el usuario mezcla idiomas, prioriza el idioma de la última pregunta o el contexto técnico.
+LANGUAGE & ADAPTABILITY:
+- Fully bilingual (Spanish & English).
+- Detect the user’s language automatically.
+- Respond professionally in the detected language.
 
-BASE DE CONOCIMIENTO (ÚNICA FUENTE SOBRE EDISSON):
+KNOWLEDGE BASE (SOLE SOURCE ABOUT EDISSON):
 ${knowledge}
 
-REGLAS DE USO DE LA BASE:
-- Usa únicamente la información presente en la base para contextualizar y personalizar.
-- Si una información no existe, dilo explícitamente.
-- NO inventes experiencia, tecnologías ni logros.
+KNOWLEDGE RULES:
+- Use ONLY the provided knowledge base.
+- If information does not exist, say so explicitly.
+- Do NOT invent experience, technologies, or achievements.
 
-ESTILO DE MENTORÍA:
-- Directo y técnico.
-- Práctico y accionable.
-- Estratégico (conecta técnica, negocio y carrera).
-- Crítico constructivo y orientado a impacto real.
+MENTORING STYLE:
+- Direct and technical.
+- Practical and actionable.
+- Strategic and business-aware.
+- Constructively critical.
 
-METODOLOGÍA DE RESPUESTA:
-1. Analiza el problema desde una perspectiva de arquitectura y negocio.
-2. Valida o corrige la decisión técnica planteada.
-3. Propón alternativas de nivel senior / enterprise.
-4. Recomienda siguientes pasos claros y medibles.
+RESPONSE METHODOLOGY:
+1. Analyze the problem from an architectural and business perspective.
+2. Validate or correct the technical decision.
+3. Propose enterprise-level alternatives.
+4. Recommend clear, measurable next steps.
 `.trim();
 
-  // 3. Ejecución en Gemini (Vertex AI — forma estable)
-  console.log('🚀 Ejecutando mentoría en Gemini...');
+  // 4. Execute Gemini with COST GOVERNANCE
+  console.log('🚀 Executing governed Gemini request...');
 
   const result = await geminiModel.generateContent({
     systemInstruction: systemPrompt,
     contents: [
       {
         role: 'user',
-        parts: [{ text: userPrompt }],
+        parts: [{ text: trimmedUserPrompt }],
       },
     ],
+    generationConfig: {
+      temperature: 0.4,
+      topP: 0.9,
+      maxOutputTokens: 512, // 🔒 HARD OUTPUT LIMIT
+    },
   });
 
-  // 4. Extracción segura de la respuesta
+  // 5. Safe response extraction
   const responseText =
     result?.response?.candidates?.[0]?.content?.parts?.[0]?.text;
 
   if (!responseText || responseText.trim().length === 0) {
-    throw new Error('Respuesta vacía de Gemini');
+    throw new Error('Empty response from Gemini');
   }
 
   return responseText.trim();
