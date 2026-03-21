@@ -130,6 +130,3 @@ npm run dev
   <em>AI Engineering Applied to Commerce</em>
 </p>
 '''
-open('README.md', 'w', encoding='utf-8').write(content)
-print('README actualizado correctamente')
-"
