@@ -1,5 +1,4 @@
-python -c "
-content = '''# 🤖 EdiMentor AI — Flagship Product (M.A.I.I.E. Ecosystem)
+# 🤖 EdiMentor AI — Flagship Product (M.A.I.I.E. Ecosystem)
 
 **EdiMentor AI** is an enterprise-grade artificial intelligence platform designed under the
 **Edisson Intelligent Architecture & Engineering Model (M.A.I.I.E.)**.
