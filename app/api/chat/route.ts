@@ -3,13 +3,9 @@ export const dynamic = 'force-dynamic';
 
 import { NextResponse } from 'next/server';
 
-/**
- * API Route: /api/chat
- * Carga dinámica del motor RAG para evitar evaluación Edge en import-time.
- */
 export async function POST(req: Request) {
   try {
-    const { message } = await req.json();
+    const { message, history } = await req.json();
 
     if (!message || typeof message !== 'string') {
       return NextResponse.json(
@@ -18,10 +14,9 @@ export async function POST(req: Request) {
       );
     }
 
-    // 🔴 IMPORT DINÁMICO (CLAVE DEL FIX)
     const { generateMentorResponse } = await import('@/lib/grounding-engine');
 
-    const response = await generateMentorResponse(message);
+    const response = await generateMentorResponse(message, history ?? []);
 
     return NextResponse.json({ response }, { status: 200 });
 
@@ -34,5 +29,3 @@ export async function POST(req: Request) {
     );
   }
 }
-
-

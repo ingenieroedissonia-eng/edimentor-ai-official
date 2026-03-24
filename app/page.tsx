@@ -32,7 +32,7 @@ export default function EdiMentorPage() {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userText }),
+        body: JSON.stringify({ message: userText, history: chatHistory }),
       });
 
       const data = await response.json();
@@ -57,7 +57,6 @@ export default function EdiMentorPage() {
         ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
       `}</style>
 
-      {/* Header */}
       <header className="p-4 border-b border-zinc-800/60 bg-black/30 backdrop-blur-xl shrink-0">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div>
@@ -87,7 +86,6 @@ export default function EdiMentorPage() {
         </div>
       </header>
 
-      {/* Chat */}
       <section className="flex-1 overflow-y-auto px-4 py-6 space-y-6 max-w-5xl mx-auto w-full flex flex-col">
         {chatHistory.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center">
@@ -136,7 +134,6 @@ export default function EdiMentorPage() {
         <div ref={chatEndRef} />
       </section>
 
-      {/* Input */}
       <footer className="p-4 bg-black/40 shrink-0">
         <form
           onSubmit={handleSendMessage}
