@@ -9,11 +9,16 @@ type ChatMessage = {
   text: string;
 };
 
+const MAX_USER_MESSAGES = 3;
+
 export default function EdiMentorPage() {
   const [message, setMessage] = useState('');
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [userMessageCount, setUserMessageCount] = useState(0);
   const chatEndRef = useRef<HTMLDivElement | null>(null);
+
+  const limitReached = userMessageCount >= MAX_USER_MESSAGES;
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -21,12 +26,17 @@ export default function EdiMentorPage() {
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!message.trim() || isLoading) return;
+    if (!message.trim() || isLoading || limitReached) return;
 
     const userText = message.trim();
     setMessage('');
     setIsLoading(true);
-    setChatHistory((prev) => [...prev, { role: 'user', text: userText }]);
+    setUserMessageCount((prev) => prev + 1);
+
+    setChatHistory((prev) => [
+      ...prev,
+      { role: 'user', text: userText },
+    ]);
 
     try {
       const response = await fetch('/api/chat', {
@@ -36,13 +46,22 @@ export default function EdiMentorPage() {
       });
 
       const data = await response.json();
-      if (!response.ok || data.error) throw new Error(data.error || 'Error');
 
-      setChatHistory((prev) => [...prev, { role: 'ai', text: data.response }]);
+      if (!response.ok || data.error) {
+        throw new Error(data.error || 'Error');
+      }
+
+      setChatHistory((prev) => [
+        ...prev,
+        { role: 'ai', text: data.response },
+      ]);
     } catch {
       setChatHistory((prev) => [
         ...prev,
-        { role: 'ai', text: '⚠️ Error: No se pudo conectar con Vertex AI.' },
+        {
+          role: 'ai',
+          text: '⚠️ Error: No se pudo conectar con Vertex AI.',
+        },
       ]);
     } finally {
       setIsLoading(false);
@@ -52,11 +71,19 @@ export default function EdiMentorPage() {
   return (
     <main className="flex flex-col h-[100dvh] bg-[#050505] text-zinc-100 font-sans overflow-hidden">
       <style jsx global>{`
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
+        ::-webkit-scrollbar {
+          width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+          background: #27272a;
+          border-radius: 10px;
+        }
       `}</style>
 
+      {/* HEADER */}
       <header className="p-4 border-b border-zinc-800/60 bg-black/30 backdrop-blur-xl shrink-0">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div>
@@ -86,6 +113,7 @@ export default function EdiMentorPage() {
         </div>
       </header>
 
+      {/* CHAT */}
       <section className="flex-1 overflow-y-auto px-4 py-6 space-y-6 max-w-5xl mx-auto w-full flex flex-col">
         {chatHistory.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center">
@@ -103,7 +131,9 @@ export default function EdiMentorPage() {
           chatHistory.map((chat, i) => (
             <div
               key={i}
-              className={`flex ${chat.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              className={`flex ${
+                chat.role === 'user' ? 'justify-end' : 'justify-start'
+              }`}
             >
               <div
                 className={`max-w-[85%] px-5 py-3 rounded-3xl text-sm shadow-xl ${
@@ -131,29 +161,65 @@ export default function EdiMentorPage() {
             </div>
           </div>
         )}
+
+        {/* LÍMITE */}
+        {limitReached && (
+          <div className="flex justify-start">
+            <div className="bg-zinc-900 border border-blue-500/30 px-5 py-4 rounded-3xl rounded-tl-none max-w-[85%]">
+              <p className="text-sm text-zinc-300 mb-3">
+                Has alcanzado el límite de consultas gratuitas de esta sesión.
+                Para continuar o contratar una solución personalizada, contáctame directamente.
+              </p>
+
+              <a
+                href="mailto:ingenieroedissonia@gmail.com"
+                className="inline-block bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition"
+              >
+                Contactar a Edisson →
+              </a>
+            </div>
+          </div>
+        )}
+
         <div ref={chatEndRef} />
       </section>
 
+      {/* FOOTER */}
       <footer className="p-4 bg-black/40 shrink-0">
-        <form
-          onSubmit={handleSendMessage}
-          className="max-w-4xl mx-auto flex gap-2 bg-zinc-900/80 border border-zinc-800 rounded-3xl p-2"
-        >
-          <input
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Consultar al Arquitecto…"
-            className="flex-1 bg-transparent px-4 py-2 text-sm outline-none"
-            disabled={isLoading}
-          />
-          <button
-            type="submit"
-            disabled={isLoading || !message.trim()}
-            className="bg-blue-600 px-6 py-2 rounded-2xl text-sm font-bold disabled:opacity-40"
+        {limitReached ? (
+          <div className="max-w-4xl mx-auto text-center py-3 border border-zinc-800 rounded-3xl bg-zinc-900/50">
+            <p className="text-xs text-zinc-500 font-mono">
+              Sesión completada ·{' '}
+              <a
+                href="mailto:ingenieroedissonia@gmail.com"
+                className="text-blue-400 hover:text-blue-300 transition"
+              >
+                Contactar para continuar
+              </a>
+            </p>
+          </div>
+        ) : (
+          <form
+            onSubmit={handleSendMessage}
+            className="max-w-4xl mx-auto flex gap-2 bg-zinc-900/80 border border-zinc-800 rounded-3xl p-2"
           >
-            Enviar
-          </button>
-        </form>
+            <input
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Consultar al Arquitecto…"
+              className="flex-1 bg-transparent px-4 py-2 text-sm outline-none"
+              disabled={isLoading}
+            />
+
+            <button
+              type="submit"
+              disabled={isLoading || !message.trim()}
+              className="bg-blue-600 px-6 py-2 rounded-2xl text-sm font-bold disabled:opacity-40"
+            >
+              Enviar
+            </button>
+          </form>
+        )}
 
         <p className="text-center text-[9px] text-zinc-700 mt-3 tracking-widest uppercase">
           Desarrollado | por Edisson A.G.C.
